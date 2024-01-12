@@ -2,6 +2,7 @@ import json
 import sys
 import os
 import datetime
+import argparse
 
 from email.message import Message
 
@@ -49,6 +50,17 @@ if not czds_base_url:
     sys.stderr.write("'czds.base.url' parameter not found in the config.json file\n")
     exit(1)
 
+#####
+# Parse ARgs
+#####
+
+parser = argparse.ArgumentParser(
+        prog='CZDS API Client',
+        description='Client for CZDS ICANN API',
+        epilog='Author 3n3a')
+parser.add_argument('-n', '--no-download', action='store_true')
+args = parser.parse_args()
+
 
 
 ##############################################################################################################
@@ -92,6 +104,8 @@ zone_links = get_zone_links(czds_base_url)
 if not zone_links:
     exit(1)
 
+if args.no_download:
+    print(zone_links)
 
 
 ##############################################################################################################
@@ -153,8 +167,11 @@ def download_zone_files(urls, working_directory):
         download_one_zone(link, output_directory)
 
 # Finally, download all zone files
-start_time = datetime.datetime.now()
-download_zone_files(zone_links, working_directory)
-end_time = datetime.datetime.now()
+if not args.no_download:
+    start_time = datetime.datetime.now()
+    download_zone_files(zone_links, working_directory)
+    end_time = datetime.datetime.now()
 
-print("{0}: DONE DONE. Completed downloading all zone files. Time spent: {1}".format(str(end_time), (end_time-start_time)))
+    print("{0}: DONE DONE. Completed downloading all zone files. Time spent: {1}".format(str(end_time), (end_time-start_time)))
+else:
+    print("Did not download because 'no download' flag set")

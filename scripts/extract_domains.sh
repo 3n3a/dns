@@ -4,5 +4,7 @@
 # also deduplicate them
 #
 
-tld=$1
+SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
+
+tld="$1"
 awk '$4=="ns" {print $1}' "$tld.txt" | sort -u > "$SCRIPT_DIR/../$tld-domains.txt"

@@ -20,7 +20,7 @@ def authenticate(username, password, authen_base_url):
     if status_code == 200:
         access_token = response.json()['accessToken']
         print('{0}: Received access_token:'.format(datetime.datetime.now()))
-        print(access_token)
+        # print(access_token)
         return access_token
     elif status_code == 404:
         sys.stderr.write("Invalid url " + authen_url)

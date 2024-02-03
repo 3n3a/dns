@@ -36,10 +36,12 @@ get_data() {
 }
 
 process_data() {
+	set -x
 	info "process_data started"
 
 	info "cleaning up urls directory"
 	rm -f $SCRIPT_DIR/../zones/urls/*
+	rm -f $SCRIPT_DIR/../zones/export/all-domains.txt
 
 	info "unpacking all gzipped zonefiles"
 	"$SCRIPT_DIR/unpack_all_zonefiles.sh"
@@ -49,6 +51,8 @@ process_data() {
 
 	info "combining all the extracted urls into a single file"
 	"$SCRIPT_DIR/combine_all_urls.sh"
+
+	sleep .5
 
 	info "process_data ended"
 }
@@ -63,12 +67,15 @@ load_data() {
 	run_sql "$SCRIPT_DIR/../sql/create_domains_table.sql"
 
 	info "load into temp table"
-	set_wal_level_minimal
+	#set_wal_level_minimal
 	run_sql "$SCRIPT_DIR/../sql/create_domains_temp_table.sql"
-	set_wal_level_replica
+	#set_wal_level_replica
 
 	info "upsert from temp to final table"
 	run_sql "$SCRIPT_DIR/../sql/upsert_temp_data.sql"
+
+	info "clean temp table"
+	run_sql "$SCRIPT_DIR/../sql/clean_temp_data.sql"
 
 	info "create indexes if not exists"
 	run_sql "$SCRIPT_DIR/../sql/create_domains_index.sql"

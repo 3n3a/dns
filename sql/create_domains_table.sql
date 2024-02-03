@@ -12,3 +12,11 @@ TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.domains
     OWNER to domains;
+
+
+-- Contraint: Uniue Value
+
+-- DROP CONSTRAINT IF EXISTS public.uq_value;
+
+ALTER TABLE IF EXISTS public.domains
+    ADD CONSTRAINT uq_value UNIQUE (value);

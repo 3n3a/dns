@@ -53,3 +53,12 @@
   psql -U postgres -c "ALTER SYSTEM SET wal_level = 'replica';" && psql -U postgres -c "SELECT pg_reload_conf();"
   ```
 
+## settings for pg
+
+* [settings documentation pg](https://www.postgresql.org/docs/current/runtime-config-wal.html)
+* [high write load db - crunchydata](https://www.crunchydata.com/blog/tuning-your-postgres-database-for-high-write-loads)
+
+| setting | value |
+| --- | --- |
+| `max_wal_size` | `SHOW max_wal_size; ALTER SYSTEM SET max_wal_size = '16GB'; SHOW max_wal_size;` |
+
